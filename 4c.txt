@@ -1,0 +1,45 @@
+# %%
+import pandas as pd
+import numpy as np
+from scipy.stats import shapiro, ttest_ind
+
+df = pd.read_csv('pizzas.csv')
+print(df.head(4))
+print(f"Shape of the dataset: {df.shape}")
+
+H0 = 'Data is normal'
+Ha = 'Data is not normal'
+alpha = 0.05
+
+# %%
+
+p1 = round(shapiro(df['Making Unit 1'])[1], 2)
+print(f"Shapiro-Wilk Test p-value for Making Unit 1: {p1}")
+
+p2 = round(shapiro(df['Making Unit 2'])[1], 2)
+print(f"Shapiro-Wilk Test p-value for Making Unit 2: {p2}")
+
+if p1 > alpha:
+    print(f"{p1} > {alpha}. We fail to reject the Null Hypothesis for Making Unit 1. {H0}")
+else:
+    print(f"{p1} <= {alpha}. We reject the Null Hypothesis for Making Unit 1. {Ha}")
+
+if p2 > alpha:
+    print(f"{p2} > {alpha}. We fail to reject the Null Hypothesis for Making Unit 2. {H0}")
+else:
+    print(f"{p2} <= {alpha}. We reject the Null Hypothesis for Making Unit 2. {Ha}")
+
+# %%
+
+if p1 > alpha and p2 > alpha:
+    t_stat, p_value = ttest_ind(df['Making Unit 1'], df['Making Unit 2'])
+    print(f"T-statistic: {t_stat}, p-value: {p_value}")
+
+    if p_value < alpha:
+        print(f"{p_value} < {alpha}. We reject the Null Hypothesis. There is a significant difference in average diameter.")
+    else:
+        print(f"{p_value} >= {alpha}. We fail to reject the Null Hypothesis. No significant difference in average diameter.")
+else:
+    print("Normality assumption is violated. Consider using a non-parametric test such as the Mann-Whitney U test.")
+
+

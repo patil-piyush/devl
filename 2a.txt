@@ -1,0 +1,58 @@
+# %%
+import pandas as pd
+
+# Load CSV file
+csv_file = .data.csv
+df_csv = pd.read_csv(csv_file)
+print(CSV file loaded successfully!)
+
+# Perform operations on CSV data
+print(nOperations on CSV data)
+
+print(nFirst 5 rows of the DataFrame)
+print(df_csv.head())
+
+print(nColumn Names)
+print(df_csv.columns)
+
+print(nSummary Statistics)
+print(df_csv.describe())
+
+if 'age' in df_csv.columns
+    print(nRows where 'age'  30)
+    print(df_csv[df_csv['age']  30])
+
+print(nMissing values in each column)
+print(df_csv.isnull().sum())
+
+print(-  60)
+
+# Load JSON file
+json_file = .data.json
+df_json = pd.read_json(json_file)
+print(JSON file loaded successfully!)
+
+# Perform operations on JSON data
+print(nOperations on JSON data)
+
+print(nFirst 5 rows of the DataFrame)
+print(df_json.head())
+
+print(nColumn Names)
+print(df_json.columns)
+
+print(nSummary Statistics)
+print(df_json.describe())
+
+if 'age' in df_json.columns
+    print(nRows where 'age'  30)
+    print(df_json[df_json['age']  30])
+
+print(nMissing values in each column)
+print(df_json.isnull().sum())
+
+
+# %%
+
+
+

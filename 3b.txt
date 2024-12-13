@@ -1,0 +1,78 @@
+# %%
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_excel('loan_pred.xlsx')
+
+print("Dataset Head:\n", data.head())
+
+# %%
+
+print("\nMissing values in the dataset:\n", data.isnull().sum())
+
+data['LoanAmount'].fillna(data['LoanAmount'].mean(), inplace=True)
+
+data['Loan_Amount_Term'].fillna(data['Loan_Amount_Term'].mode()[0], inplace=True)
+
+data['Credit_History'].fillna(data['Credit_History'].mode()[0], inplace=True)
+
+for column in ['Gender', 'Married', 'Dependents', 'Self_Employed']:
+    data[column].fillna(data[column].mode()[0], inplace=True)
+
+print("\nSummary Statistics:\n", data.describe())
+
+
+# %%
+plt.figure(figsize=(8,6))
+plt.scatter(x = data['ApplicantIncome'], y = data['LoanAmount'], color='purple')
+plt.title('Applicant Income vs Loan Amount')
+plt.xlabel('Applicant Income')
+plt.ylabel('Loan Amount')
+plt.grid(True)
+plt.show()
+
+# %%
+plt.figure(figsize=(6,4))
+data['Loan_Status'].value_counts().plot(kind='bar', color=['blue', 'green'])
+plt.title('Loan Status Count')
+plt.xlabel('Loan Status')
+plt.ylabel('Count')
+plt.grid(True)
+plt.show()
+
+# %%
+plt.figure(figsize=(8,6))
+sns.histplot(data['ApplicantIncome'], bins=50, color='teal')
+plt.title('Distribution of Applicant Income')
+plt.xlabel('Applicant Income')
+plt.ylabel('Frequency')
+plt.grid(True)
+plt.show()
+
+# %%
+plt.figure(figsize=(8,6))
+sns.countplot(x='Loan_Status', data=data, palette='Set1')
+plt.title('Loan Status Distribution')
+plt.show()
+
+# %%
+plt.figure(figsize=(8,6))
+sns.boxplot(x='Education', y='ApplicantIncome', data=data, palette='Set2')
+plt.title('Applicant Income by Education Level')
+plt.show()
+
+# %%
+plt.figure(figsize=(8,6))
+sns.pairplot(data[['ApplicantIncome', 'CoapplicantIncome', 'LoanAmount']], diag_kind='kde')
+plt.show()
+
+# %%
+plt.figure(figsize=(10,8))
+numeric_data = data.select_dtypes(include = 'number')
+corr_matrix = numeric_data.corr()
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap of Numerical Features')
+plt.show()
+
+

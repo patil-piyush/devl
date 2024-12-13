@@ -1,0 +1,68 @@
+# %%
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_excel('loan_pred.xlsx')
+
+print("Dataset Head:\n", data.head())
+
+
+# %%
+print("\nMissing values in the dataset:\n", data.isnull().sum())
+
+# %%
+data['LoanAmount'].fillna(data['LoanAmount'].mean(), inplace=True)
+
+data['Loan_Amount_Term'].fillna(data['Loan_Amount_Term'].mode()[0], inplace=True)
+
+data['Credit_History'].fillna(data['Credit_History'].mode()[0], inplace=True)
+
+for column in ['Gender', 'Married', 'Dependents', 'Self_Employed']:
+    data[column].fillna(data[column].mode()[0], inplace=True)
+
+print("\nSummary Statistics:\n", data.describe())
+
+# %%
+plt.figure(figsize=(18, 6))
+
+sns.histplot(data['ApplicantIncome'], kde=True, color='blue')
+plt.title('Distribution of Applicant Income')
+
+# %%
+plt.figure(figsize=(18, 6))
+sns.histplot(data['LoanAmount'], kde=True, color='green')
+plt.title('Distribution of Loan Amount')
+
+plt.tight_layout()
+plt.show()
+
+# %%
+# Count plot for Loan Status
+plt.figure(figsize=(6, 4))
+sns.countplot(x='Loan_Status', data=data, palette='Set2')
+plt.title('Loan Status Count')
+plt.show()
+
+# %%
+plt.figure(figsize=(6, 4))
+sns.countplot(x='Property_Area', data=data, palette='Set1')
+plt.title('Property Area Distribution')
+plt.show()
+
+# %%
+plt.figure(figsize=(6, 4))
+sns.countplot(x='Gender', data=data, palette='Set3')
+plt.title('Gender Distribution')
+plt.show()
+
+# %%
+print("\nObservations:")
+print("- The average loan amount is {:.2f}, and there is a large variation in loan amounts.".format(data['LoanAmount'].mean()))
+print("- The applicant income distribution is skewed with a few applicants earning significantly higher incomes.")
+print("- There are more loans approved (Loan_Status 'Y') than denied.")
+print("- Urban and Semi-Urban areas have more loan applicants than Rural areas.")
+print("- More male applicants are present in the dataset compared to female applicants.")
+
+

@@ -1,0 +1,79 @@
+# %%
+import requests
+from bs4 import BeautifulSoup
+
+url = "https://www.bikewale.com/"
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
+
+response = requests.get(url, headers=headers)
+data = BeautifulSoup(response.text, 'html.parser')
+pretty_html = data.prettify()
+print(pretty_html)
+
+
+
+# %%
+list = data.find_all("h3", class_="ipc-title__text")
+print(list)
+
+# %%
+movie_names = [item.text for item in list if item.text not in ["IMDb Charts", "Recently viewed"]]
+print(movie_names)
+print("\n\n")
+movies_replaced = [item.split('. ', 1)[1] for item in movie_names]
+print(movies_replaced)
+
+
+# %%
+year_list = data.find_all('span', class_ = "sc-300a8231-7 eaXxft cli-title-metadata-item")
+print(year_list)
+
+# %%
+years = [item for item in year_list if item.isdigit() and len(item) == 4]
+print("Years:", years)
+
+# %%
+times = [item for item in year_num if 'h' in item and 'm' in item]
+print("Times:", times)
+
+# %%
+rating_list = data.find_all("span", class_ = "ipc-rating-star--rating")
+print(rating_list)
+
+# %%
+rating = [item.text for item in rating_list]
+print(rating)
+
+# %%
+reviews_list = data.find_all('span', class_ = "ipc-rating-star--voteCount")
+print(reviews_list)
+
+# %%
+reviews = [item.text for item in reviews_list ]
+print(reviews)
+
+# %%
+reviews_2 = [item.replace('\xa0(', '').replace(')', '') for item in reviews]
+print(reviews_2)
+
+# %%
+import pandas as pd
+
+
+dataset = pd.DataFrame({
+    "Movie" : movies_replaced,
+    "Duration" : times,
+    "Year": years,
+    "Rating": rating,
+    "Reviews": reviews_2
+})
+
+print(dataset)
+
+# %%
+dataset.to_csv("imdb.csv", index=True)
+
+

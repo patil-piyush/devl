@@ -1,0 +1,47 @@
+# %%
+import pandas as pd
+
+df = pd.read_csv("Match_Results.csv")
+print(df)
+
+df.isnull()
+
+df.isnull().sum()
+
+import pandas as pd
+
+df["away_team"].fillna(df["away_team"].mode()[0], inplace=True)
+
+df["home_score"].fillna(df["home_score"].mean(), inplace=True)
+df["away_score"].fillna(df["away_score"].mean(), inplace=True)
+
+df["city"].fillna(df["city"].mode()[0], inplace=True)
+
+df.isnull().sum()
+
+import pandas as pd
+
+def fix_outliers_IQR(column):
+    Q1 = column.quantile(0.25)
+    Q3 = column.quantile(0.75)
+    IQR = Q3 - Q1              
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    print(column, " Outliers", "\n", column[(column < lower_bound) | (column > upper_bound)],"\n")
+    
+    column = column.apply(lambda x: lower_bound if x < lower_bound else (upper_bound if x > upper_bound else x))
+    
+    return column
+
+df['home_score'] = fix_outliers_IQR(df['home_score'])
+df['away_score'] = fix_outliers_IQR(df['away_score'])
+
+print("DataFrame after fixing outliers:")
+print(df[['home_score', 'away_score']])
+
+
+print(df)
+df.to_csv("Match_Results_.csv")
+
+
